@@ -3,10 +3,13 @@
 
 // Making this thread-safe is out of scope.
 // Could stress-test by making SharedPtr<SharedPtr<T>> objects
+// ^that doesn't work because the default ctor is deleted--defaulting it allows
+// this to work
 
 template <typename T> class SharedPtr final {
 public:
-  SharedPtr() = delete;
+  // SharedPtr() = delete;
+  SharedPtr() = default;
 
   ~SharedPtr() {
     --(*ref_count_);

@@ -2,8 +2,6 @@
 #include <iostream>
 
 // Making this thread-safe is out of scope.
-//
-// Define generalized (templated) copy ctor (et al.)
 
 template <typename T> class SharedPtr final {
 public:
@@ -20,10 +18,15 @@ public:
     return SharedPtr{ptr, ref_count};
   }
 
-  // Also think about copy ctor for creating from types convertible to T.
-  // "generalized copy ctor"
   SharedPtr(SharedPtr const &shared_ptr)
       : ptr_{shared_ptr.ptr_}, ref_count_{shared_ptr.ref_count_} {
+    ++(*ref_count_);
+  }
+
+  // Can also add generalized move ctor and copy/move assignment operator.
+  template <typename U>
+  SharedPtr(SharedPtr<U> const &shared_ptr)
+      : ptr_{shared_ptr.get()}, ref_count_{shared_ptr.get_count()} {
     ++(*ref_count_);
   }
 
@@ -58,6 +61,8 @@ public:
   T operator*() const { return *ptr_; }
 
   T *operator->() const { return ptr_; }
+
+  size_t *get_count() const { return ref_count_; }
 
 private:
   explicit SharedPtr(T *ptr, size_t *ref_count)

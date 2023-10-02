@@ -2,14 +2,12 @@
 #include <iostream>
 
 // Making this thread-safe is out of scope.
-// Could stress-test by making SharedPtr<SharedPtr<T>> objects
-// ^that doesn't work because the default ctor is deleted--defaulting it allows
-// this to work
+//
+// Define generalized (templated) copy ctor (et al.)
 
 template <typename T> class SharedPtr final {
 public:
-  // SharedPtr() = delete;
-  SharedPtr() = default;
+  SharedPtr() = delete;
 
   ~SharedPtr() {
     --(*ref_count_);

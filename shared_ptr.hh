@@ -72,7 +72,6 @@ private:
     assert(*ref_count_ >= 0u);
     assert(ptr_ != nullptr);
     if (*ref_count_ == 0u) {
-      ptr_->~T();
       delete ptr_;
       delete ref_count_;
     }
